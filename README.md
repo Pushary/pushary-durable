@@ -4,7 +4,7 @@
 [![npm](https://img.shields.io/npm/v/@pushary/durable)](https://www.npmjs.com/package/@pushary/durable)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Full walkthrough: [Human-in-the-loop for durable orchestrators (Inngest, Temporal, Vercel Workflow)](https://pushary.com/human-in-the-loop). Reaching your own end-users on their phones is the Pushary [Partner plan](https://pushary.com/human-in-the-loop).
+Full walkthrough: [Human-in-the-loop for durable orchestrators (Inngest, Temporal, Vercel Workflow)](https://pushary.com/human-in-the-loop?utm_source=github&utm_medium=oss-adapter&utm_campaign=pushary-durable&utm_content=readme). Reaching your own end-users on their phones is the Pushary [Partner plan](https://pushary.com/human-in-the-loop?utm_source=github&utm_medium=oss-adapter&utm_campaign=pushary-durable&utm_content=readme).
 
 Durable human-in-the-loop for step orchestrators. Park your workflow until a real
 human approves on their phone, and resume on a signed webhook, with zero idle
@@ -15,7 +15,7 @@ Works with [Inngest](https://www.inngest.com), [Temporal](https://temporal.io), 
 an external event. It adds no framework dependency of its own, so it drops into
 whichever one you already run.
 
-Requires the Pushary [Partner plan](https://pushary.com/agent-notifications-integration).
+Requires the Pushary [Partner plan](https://pushary.com/agent-notifications-integration?utm_source=github&utm_medium=oss-adapter&utm_campaign=pushary-durable&utm_content=readme).
 
 ## Install
 
@@ -149,6 +149,10 @@ verifies the HMAC signature) before you act.
 - `isAffirmative(answer)` — fail-closed yes/no check for a confirm answer.
 - `deterministicKey(parts)` — a stable idempotency key from your run + step ids.
 - Re-exports: `verifyWebhookSignature`, `parseDecisionCallback`, `SIGNATURE_HEADER`.
+
+## Example
+
+A runnable example is in [`examples/`](examples).
 
 ## License
 
