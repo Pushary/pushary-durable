@@ -6,7 +6,10 @@
   "homepage": "https://pushary.com/human-in-the-loop",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Pushary/pushary-durable.git"
+    "url": "git+https://github.com/Pushary/pushary-durable.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Pushary/pushary-durable/issues"
   },
   "license": "MIT",
   "type": "module",
@@ -61,8 +64,5 @@
     "approval",
     "workflow",
     "webhook"
-  ],
-  "bugs": {
-    "url": "https://github.com/Pushary/pushary-durable/issues"
-  }
+  ]
 }
