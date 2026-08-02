@@ -1,6 +1,6 @@
 {
   "name": "@pushary/durable",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Durable human-in-the-loop for Inngest, Temporal, and Vercel Workflow: park your workflow until a real human approves on their phone, resume on a signed webhook.",
   "author": "Pushary <business@pushary.com>",
   "homepage": "https://pushary.com/human-in-the-loop",
