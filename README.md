@@ -1,30 +1,49 @@
 # @pushary/durable
 
+Phone approvals for Inngest, Temporal and Vercel Workflow runs. Your workflow asks, your user taps Approve or Deny.
+
+[Full walkthrough: human approval for workflow runners](https://pushary.com/human-in-the-loop?utm_source=github&utm_medium=oss-adapter&utm_campaign=pushary-durable&utm_content=readme)
+
 [![CI](https://github.com/Pushary/pushary-durable/actions/workflows/ci.yml/badge.svg)](https://github.com/Pushary/pushary-durable/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/@pushary/durable)](https://www.npmjs.com/package/@pushary/durable)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Full walkthrough: [Human-in-the-loop for durable orchestrators (Inngest, Temporal, Vercel Workflow)](https://pushary.com/human-in-the-loop?utm_source=github&utm_medium=oss-adapter&utm_campaign=pushary-durable&utm_content=readme). Reaching your own end-users on their phones is the Pushary [Partner plan](https://pushary.com/human-in-the-loop?utm_source=github&utm_medium=oss-adapter&utm_campaign=pushary-durable&utm_content=readme).
+## What you need
 
-Durable human-in-the-loop for step orchestrators. Park your workflow until a real
-human approves on their phone, and resume on a signed webhook, with zero idle
-compute during the wait.
+- A Pushary Partner plan, from $99 a month. [Start the trial](https://pushary.com/sign-up?from=agent&plan=partner&utm_source=github&utm_medium=oss-adapter&utm_campaign=pushary-durable&utm_content=partner-start).
+- An API key from [Partner onboarding](https://pushary.com/onboarding/partner), set as `PUSHARY_API_KEY`.
+- Your users install the free Pushary app ([iPhone](https://apps.apple.com/us/app/pushary/id6785677563), [Android](https://play.google.com/store/apps/details?id=com.pushary.app)). They never sign up or pay.
 
-Works with [Inngest](https://www.inngest.com), [Temporal](https://temporal.io), and
-[Vercel Workflow](https://vercel.com/docs/workflows), or any runner that can wait on
-an external event. It adds no framework dependency of its own, so it drops into
-whichever one you already run.
-
-Requires the Pushary [Partner plan](https://pushary.com/agent-notifications-integration?utm_source=github&utm_medium=oss-adapter&utm_campaign=pushary-durable&utm_content=readme).
-
-## Install
+## Quick start
 
 ```bash
 npm i @pushary/durable
 ```
 
-Set `PUSHARY_API_KEY` (get it in your [dashboard](https://pushary.com/dashboard/settings))
-and `PUSHARY_WEBHOOK_SECRET` (from `decisions.getWebhookSecret()`).
+```ts
+import { connect, createApproval, deterministicKey, resolveApproval } from '@pushary/durable'
+
+const config = { apiKey: process.env.PUSHARY_API_KEY! }
+const { universalLink } = await connect(config, user.id) // once per user: show them this link
+
+const { correlationId } = await createApproval(config, {
+  externalId: user.id,
+  question: 'Approve a $480 refund?',
+  callbackUrl: `${process.env.PUBLIC_URL}/pushary/callback`,
+  idempotencyKey: deterministicKey([runId, 'refund-approval']),
+})
+// Save correlationId against the run, then park it. Nothing runs while it waits.
+
+const approval = resolveApproval(rawBody, signature, process.env.PUSHARY_WEBHOOK_SECRET!)
+if (approval?.approved) await resumeRun(approval.correlationId)
+```
+
+The last two lines go in your callback route. `PUSHARY_WEBHOOK_SECRET` comes from `decisions.getWebhookSecret()`.
+
+Works with [Inngest](https://www.inngest.com), [Temporal](https://temporal.io), and
+[Vercel Workflow](https://vercel.com/docs/workflows), or any runner that can wait on
+an external event. It adds no framework dependency of its own, so it drops into
+whichever one you already run.
 
 ## The shape
 
@@ -143,11 +162,11 @@ verifies the HMAC signature) before you act.
 
 ## API
 
-- `connect(config, externalId)` — enroll an end-user's phone, returns `EnrollResult`.
-- `createApproval(config, input)` — open a durable decision, returns `{ decisionId, correlationId, reachable, ... }`.
-- `resolveApproval(rawBody, signature, secret)` — verify + parse a callback into `{ correlationId, answer, value, approved, context? }`, or `null` if invalid.
-- `isAffirmative(answer)` — fail-closed yes/no check for a confirm answer.
-- `deterministicKey(parts)` — a stable idempotency key from your run + step ids.
+- `connect(config, externalId)`: enroll an end-user's phone, returns `EnrollResult`.
+- `createApproval(config, input)`: open a durable decision, returns `{ decisionId, correlationId, reachable, ... }`.
+- `resolveApproval(rawBody, signature, secret)`: verify + parse a callback into `{ correlationId, answer, value, approved, context? }`, or `null` if invalid.
+- `isAffirmative(answer)`: fail-closed yes/no check for a confirm answer.
+- `deterministicKey(parts)`: a stable idempotency key from your run + step ids.
 - Re-exports: `verifyWebhookSignature`, `parseDecisionCallback`, `SIGNATURE_HEADER`.
 
 ## Example
