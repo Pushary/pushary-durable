@@ -1,6 +1,6 @@
 {
   "name": "@pushary/durable",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Phone approvals for Inngest, Temporal and Vercel Workflow runs. Your workflow asks, your user taps Approve or Deny.",
   "author": "Pushary <business@pushary.com>",
   "homepage": "https://pushary.com/human-in-the-loop",
