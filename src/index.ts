@@ -13,7 +13,7 @@ import {
 export { SIGNATURE_HEADER, verifyWebhookSignature, parseDecisionCallback, deterministicKey }
 
 export interface PusharyDurableConfig {
-  /** Your Pushary API key (pk_xxx.sk_xxx). Defaults to `process.env.PUSHARY_API_KEY`. */
+  /** Your Pushary API key (pk_xxx.xxx). Defaults to `process.env.PUSHARY_API_KEY`. */
   readonly apiKey?: string
   /** Shown on the approval so the human knows which agent is asking. */
   readonly agentName?: string
